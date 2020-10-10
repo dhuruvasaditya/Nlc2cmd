@@ -5,8 +5,6 @@ from tqdm import tqdm
 from src.submission_code.encoder_decoder.data_utils import nl_to_partial_tokens,cm_to_partial_tokens
 from nlp_tools import tokenizer
 from bashlint import data_tools
-
-
 def Cust_Cmd_Tokenizer(String,parse="Template"):
     """As per our need Custom CMD Tokenizer"""
     if parse == "Norm":
@@ -36,6 +34,12 @@ class NlCmdset(Dataset):
         self.Data = read_json(file_dir)
         self.Load_Vocab(vocab_dir)
         self.Data_Prep(self.Data)
+        self.write_json(self.NL,self.Cmd,r"G:\Work Related\Nlc2cmd\Data\Template.json")
+    def write_json(self,NL,CMD,path):
+        Dict = {"NL":NL,"CMD":CMD}
+        with open(path, 'w') as outfile:
+            json.dump(Dict, outfile)
+
     def Load_Vocab(self,vocab_dir):
         """Load Vocabulary File from Dataset """
         self.Vocab =  {"i":0}
@@ -51,8 +55,8 @@ class NlCmdset(Dataset):
         for key in Data:
             Need = Data[key]
             try:
-                Vec_Lang =  self.Vectorize_Ind(Cust_NL_Tokenizer(Need["invocation"]),self.Vocab)
-                Vec_Cmd  =  self.Vectorize_Ind(Cust_Cmd_Tokenizer(Need["cmd"]),self.Vocab)
+                Vec_Lang = Cust_NL_Tokenizer(Need["invocation"])  #self.Vectorize_Ind(Cust_NL_Tokenizer(Need["invocation"]),self.Vocab)
+                Vec_Cmd  = Cust_Cmd_Tokenizer(Need["cmd"]) #self.Vectorize_Ind(Cust_Cmd_Tokenizer(Need["cmd"]),self.Vocab)
                 NL.append(Vec_Lang)
                 Cmd.append(Vec_Cmd)
             except:
@@ -71,4 +75,4 @@ if __name__ == "__main__":
     #print(str(Cust_Cmd_Tokenizer(r'find . -perm -600 -print')))
     TranslationSet = NlCmdset(r"G:\Work Related\Nlc2cmd\Data\nl2bash-data.json"
                                 ,"..\Data")
-    print(TranslationSet[2])
+    #print(TranslationSet[2])
