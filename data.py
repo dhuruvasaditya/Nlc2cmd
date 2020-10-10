@@ -6,6 +6,7 @@ from src.submission_code.encoder_decoder.data_utils import nl_to_partial_tokens,
 from nlp_tools import tokenizer
 from bashlint import data_tools
 
+
 def Cust_Cmd_Tokenizer(String,parse="Template"):
     """As per our need Custom CMD Tokenizer"""
     if parse == "Norm":
@@ -64,9 +65,10 @@ class NlCmdset(Dataset):
         return [Lang,Cmd]
 
 if __name__ == "__main__":
-    print(Cust_NL_Tokenizer(r'Execute md5sum command on files found by the find command'))
-    print(Cust_NL_Tokenizer(r'find all the files in ".\data\utils" '))
-    print(Cust_Cmd_Tokenizer(r'find  ".\data\utils"'))
-    print(Cust_Cmd_Tokenizer(r'find . -perm -600 -print'))
-    TranslationSet = NlCmdset(r"G:\Work Related\NL2Bash\BASH\Data\nl2bash-data.json","..\Data")
+    #print(Cust_NL_Tokenizer(r'Execute md5sum command on files found by the find command'))
+    #print(Cust_NL_Tokenizer(r'find all the files in ".\data\utils" '))
+    #print(Cust_Cmd_Tokenizer(r'find  ".\data\utils"'))
+    #print(str(Cust_Cmd_Tokenizer(r'find . -perm -600 -print')))
+    TranslationSet = NlCmdset(r"G:\Work Related\Nlc2cmd\Data\nl2bash-data.json"
+                                ,"..\Data")
     print(TranslationSet[2])
