@@ -27,6 +27,7 @@ def Cust_NL_Tokenizer(String,parse="Template"):
 
 
 class NlCmdset(Dataset):
+    '''Torch Style Dataset for using models'''
     def __init__(self,file_dir,vocab_dir):
         '''
         file_dir : Dataset.json file
