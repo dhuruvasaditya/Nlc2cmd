@@ -7,7 +7,7 @@ from nlp_tools import tokenizer
 from bashlint import data_tools
 
 def Cust_Cmd_Tokenizer(String,parse="Template"):
-    '''As per our need Custom CMD Tokenizer'''
+    """As per our need Custom CMD Tokenizer"""
     if parse == "Norm":
         Command = cm_to_partial_tokens(String,
                         tokenizer=data_tools.bash_tokenizer)
@@ -18,7 +18,7 @@ def Cust_Cmd_Tokenizer(String,parse="Template"):
     return Template_Tokens_List
 
 def Cust_NL_Tokenizer(String,parse="Template"):
-    '''Custom NL Tokenizer'''
+    """Custom NL Tokenizer"""
     if parse == "Template":
         Tokens_List = nl_to_partial_tokens(String,tokenizer=tokenizer.ner_tokenizer)
     elif parse == "Norm":
@@ -27,15 +27,16 @@ def Cust_NL_Tokenizer(String,parse="Template"):
 
 
 class NlCmdset(Dataset):
-    '''Torch Style Dataset for using models'''
+    """Torch Style Iterator Dataset for use"""
     def __init__(self,file_dir,vocab_dir):
-        '''
+        """
         file_dir : Dataset.json file
-        '''
+        """
         self.Data = read_json(file_dir)
         self.Load_Vocab(vocab_dir)
         self.Data_Prep(self.Data)
-    def Load_Vocab(self,Vocab):
+    def Load_Vocab(self,vocab_dir):
+        """Load Vocabulary File from Dataset """
         self.Vocab =  {"i":0}
         return None
     def __len__(self):
