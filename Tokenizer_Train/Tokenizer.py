@@ -2,6 +2,10 @@
 import json
 from tqdm import tqdm 
 def Prep_Need_Data(Input_Path,Output_File):
+    """
+    Single time use function converting the
+    json file into a tokenizer library consumable file.
+    """
     File = open(Output_File,"w")
     with open(Input_Path) as json_file:
         Data = json.load(json_file)
