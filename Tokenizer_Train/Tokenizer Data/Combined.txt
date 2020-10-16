@@ -16787,9 +16787,9 @@ find Path -iname Regex -or -iname Regex
 display all file in current folder after prune those in current folder
 find Path -prune -print
 display all file in current folder along with last access timestamp
-find Path -printf "%h/%f : dernier accès le %Ac\n"
+find Path -printf "%h/%f : dernier accÃ¨s le %Ac\n"
 display all file in current folder along with last access timestamp
-find Path -printf "%h/%f : dernier accès le %AA %Ad %AB %AY à %AH:%AM:%AS\n"
+find Path -printf "%h/%f : dernier accÃ¨s le %AA %Ad %AB %AY Ã  %AH:%AM:%AS\n"
 display all file in current folder and not search in sub directori
 find Path -maxdepth Quantity
 display all file in current folder expect text file
