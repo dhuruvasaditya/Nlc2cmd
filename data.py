@@ -1,12 +1,12 @@
 import json
 from  torch.utils.data import Dataset 
-from pandas import read_json
 from tqdm import tqdm
 from src.submission_code.encoder_decoder.data_utils import nl_to_partial_tokens,cm_to_partial_tokens
 from nlp_tools import tokenizer
 from bashlint import data_tools
-from torch import stack,Tensor
-
+from torch import stack,Tensor,LongTensor
+import sys
+sys.setrecursionlimit(10000)  
 def Cust_Cmd_Tokenizer(String,parse="Template"):
     """As per our need Custom CMD Tokenizer"""
     if parse == "Norm":
@@ -44,7 +44,7 @@ class WriteJSON(Dataset):
     def Data_Prep(self,Data):
         print("Starting Loading Data.")
         NL_Cmd = []
-        for key in Data:
+        for key in tqdm(Data):
             Need = Data[key]
             try:
                 Vec_Lang = Cust_NL_Tokenizer(Need["invocation"]) 
@@ -74,11 +74,15 @@ def pad_and_get_mask(mode,code, nl, tokenizer,block_size):
         return inputs, labels
     assert len(inputs) <= block_size
     pad_len = block_size - len(inputs)
-    inputs += [tokenizer.pad_token_id] * pad_len
+    inputs += [0] * pad_len
     labels += [0] * pad_len
     assert len(inputs) == len(labels)
-    return inputs, labels
+    return inputs,labels
 
+def read_json(jsonpath):
+    with open(jsonpath) as json_file:
+        data = json.load(json_file)
+    return data
 
 class OmnibashDataset(Dataset):
     '''OmniBASH Dataset torch.utils.data.Dataset Object
@@ -92,18 +96,21 @@ class OmnibashDataset(Dataset):
         self.Tokenizer = Tokenizer
         self.mode = Mode
         self.Block_Size = Block_Size
+        print("Starting to read")
+        self.Load_Json_Data_Template(self.Data)
     def Load_Json_Data_Template(self,Json):
         Input_Set = []
         Input_Label = []
-        for data in Json:
+        for data in tqdm(Json):
             NL = " ".join(data["NL"])
-            Cmd =" ".join(data["Cmd"])
-            Input,Label = pad_and_get_mask(self.mode,Cmd,NL,self.Tokenizer,self.Block_Size)
-            self.Input_Set.append(Input)
-            self.Input_Label.append(Label)
-        Input = stack(Input_Set)
-        Labels = stack(Input_Label)
-        self.Inputs,self.Labels = Input,Labels
+            Cmd =" ".join(data["Cmd"])   
+            NL_Token = self.Tokenizer.encode(NL)
+            Cmd_Token = self.Tokenizer.encode(Cmd)
+            Input,Label = pad_and_get_mask(self.mode,Cmd_Token,NL_Token,self.Tokenizer,self.Block_Size)
+            Input_Set.append(Tensor(Input))
+            Input_Label.append(Tensor(Label))
+        self.Inputs = stack(Input_Set)
+        self.Labels = stack(Input_Label)
         return  None
     def __getitem__(self, index):
         return self.Inputs[index],self.Labels[index]

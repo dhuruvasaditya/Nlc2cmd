@@ -2742,4 +2742,3 @@ ok dir
 sc an
 no leaf
 Ġjo e
-Ġdo s

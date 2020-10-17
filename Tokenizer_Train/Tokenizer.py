@@ -29,7 +29,8 @@ def Prep_Need_Data(Input_Path,Output_File):
 def Tok_Train(input_file_path,vocab_size,output_path):
     """Train a Simple BPE Tokenizer"""
     GPTToken = ByteLevelBPETokenizer(lowercase=False)
-    GPTToken.train([input_file_path],vocab_size=3000,min_frequency=2)
+    GPTToken.enable_padding()
+    GPTToken.train([input_file_path],vocab_size=3000,min_frequency=2,special_tokens=["PAD"])
     GPTToken.save_model(output_path)
     return None
 
