@@ -12,7 +12,7 @@ class OmniBash(Module):
     def forward(self,Input,Label):
         attn_mask = tensor(Label.clone().detach() != 0.0,dtype=uint8,device=self.device)#.unsqueeze(0) #device=self.device)
         loss_mask = tensor(Label.clone().detach() == 2.0, dtype=uint8,device=self.device)#.unsqueeze(0) #device=self.device)
-        Input = Input.long()
+        Input = Input.long().to(self.device)
         Output = self.Trans(Input,attention_mask=attn_mask)
         logits = Output[0]
         labels = Input
@@ -25,7 +25,7 @@ class OmniBash(Module):
 
 if __name__ == "__main__":
     Trans_Config = OpenAIGPTConfig(vocab_size=3002,n_layer=12)
-    Trans_Model = OpenAIGPTLMHeadModel(Trans_Config)
+    Trans_Model = OpenAIGPTLMHeadModel(Trans_Config,)
     Token_Dir = r"G:\Work Related\Nlc2cmd\Tokenizer_Train\GPTToken/"
     Trans_Tok = GPT2TokenizerFast.from_pretrained(Token_Dir)
     Omni = OmniBash(Trans_Model,"cpu")

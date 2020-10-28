@@ -12,7 +12,7 @@ class GPTTrain(LightningModule):
         super(GPTTrain,self).__init__()
         Trans_Config = OpenAIGPTConfig(vocab_size=hparams["vocab_size"],n_layer=hparams["layers_num"])
         Trans_Model = OpenAIGPTLMHeadModel(Trans_Config)
-        self.Transformer = OmniBash(Trans_Model,hparams["device"])
+        self.Transformer = OmniBash(Trans_Model,hparams["device"]).to(hparams["device"])
         self.Trans_Tok = GPT2TokenizerFast.from_pretrained(hparams["tokenizer_dir"])
         self.hparams = hparams
     def forward(self,Input,Label):
