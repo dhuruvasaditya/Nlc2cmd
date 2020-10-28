@@ -3,6 +3,7 @@ from torch import tensor,uint8,LongTensor,Tensor
 from torch.utils.data import DataLoader
 from data import OmnibashDataset
 from transformers import OpenAIGPTLMHeadModel,OpenAIGPTConfig,GPT2TokenizerFast
+from torch import nonzero
 class OmniBash(Module):
     def __init__(self,Transformer,Device):
         super(OmniBash,self).__init__()
@@ -17,7 +18,10 @@ class OmniBash(Module):
         labels = Input
         shift_logits = logits[..., :-1, :].contiguous()
         shift_labels = labels[..., 1:].contiguous()
-        return logits
+        flatten_shift_loss_mask = loss_mask[..., :-1].contiguous().view(-1)
+        ids = nonzero(flatten_shift_loss_mask).view(-1)
+        fin_logits,fin_labels = shift_logits.view(-1, shift_logits.size(-1))[ids], shift_labels.view(-1)[ids]
+        return fin_logits,fin_labels
 
 if __name__ == "__main__":
     Trans_Config = OpenAIGPTConfig(vocab_size=3002,n_layer=12)
@@ -27,5 +31,14 @@ if __name__ == "__main__":
     Omni = OmniBash(Trans_Model,"cpu")
     Dataset = OmnibashDataset(r"G:\Work Related\Nlc2cmd\Data\Template.json",Trans_Tok,"train",100)
     TrainLoader = DataLoader(Dataset,batch_size=10)
-    Sample = next(iter(TrainLoader))
-    print(Omni(Sample[0],Sample[1]).size())
+    Samples = TrainLoader
+    c = 0
+    from torch.nn import CrossEntropyLoss
+    for step, batch in enumerate(TrainLoader):
+        print(c)
+        
+        x,y = Omni(batch[0],batch[1])
+        print(CrossEntropyLoss()(x,y))
+        c += 1
+        print(x.size())
+        print(y.size())

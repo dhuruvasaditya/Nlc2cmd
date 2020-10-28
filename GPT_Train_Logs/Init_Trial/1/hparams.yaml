@@ -1,0 +1,10 @@
+batch_size: 10
+data_path: G:/Work Related/Nlc2cmd/Data/Template.json
+device: cpu
+layers_num: 6
+lr: 0.001
+max_epoch: 2
+seqlen: 100
+state: train
+tokenizer_dir: G:/Work Related/Nlc2cmd/Tokenizer_Train/GPTToken/
+vocab_size: 3002

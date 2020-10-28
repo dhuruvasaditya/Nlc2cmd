@@ -1,0 +1,11 @@
+{"vocab_size":3002,
+"layers_num":6,
+"device":"cpu",
+"data_path":"G:/Work Related/Nlc2cmd/Data/Template.json",
+"tokenizer_dir":"G:/Work Related/Nlc2cmd/Tokenizer_Train/GPTToken/",
+"state":"train",
+"seqlen":100,
+"batch_size":10,
+"max_epoch":2,
+"lr":0.001
+}
