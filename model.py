@@ -31,14 +31,3 @@ if __name__ == "__main__":
     Omni = OmniBash(Trans_Model,"cpu")
     Dataset = OmnibashDataset(r"G:\Work Related\Nlc2cmd\Data\Template.json",Trans_Tok,"train",100)
     TrainLoader = DataLoader(Dataset,batch_size=10)
-    Samples = TrainLoader
-    c = 0
-    from torch.nn import CrossEntropyLoss
-    for step, batch in enumerate(TrainLoader):
-        print(c)
-        
-        x,y = Omni(batch[0],batch[1])
-        print(CrossEntropyLoss()(x,y))
-        c += 1
-        print(x.size())
-        print(y.size())
