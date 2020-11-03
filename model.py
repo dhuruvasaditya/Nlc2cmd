@@ -1,4 +1,4 @@
-from torch.nn import Module
+from torch.nn import Module,Parameter
 from torch import tensor,uint8,LongTensor,Tensor
 from torch.utils.data import DataLoader
 from data import OmnibashDataset
@@ -7,7 +7,7 @@ from torch import nonzero
 class OmniBash(Module):
     def __init__(self,Transformer,Device):
         super(OmniBash,self).__init__()
-        self.Trans = Transformer # Transformer ModelEE
+        self.Trans = Transformer# Transformer ModelEE)
         self.device = Device
     def forward(self,Input,Label):
         attn_mask = tensor(Label.clone().detach() != 0.0,dtype=uint8,device=self.device)#.unsqueeze(0) #device=self.device)
@@ -22,6 +22,13 @@ class OmniBash(Module):
         ids = nonzero(flatten_shift_loss_mask).view(-1)
         fin_logits,fin_labels = shift_logits.view(-1, shift_logits.size(-1))[ids], shift_labels.view(-1)[ids]
         return fin_logits,fin_labels
+    def decode(self,Input,Label):
+        """decode the given input probabilities with search probabilities"""
+        attn_mask = tensor(Label.clone().detach() == 1.0,dtype=uint8,device=self.device)
+        Input = Input.long().to(self.device)
+        Output = self.Trans.generate(Input,attention_mask=attn_mask,max_length=150)
+        return Output
+      
 
 if __name__ == "__main__":
     Trans_Config = OpenAIGPTConfig(vocab_size=3002,n_layer=12)
@@ -32,13 +39,7 @@ if __name__ == "__main__":
     Dataset = OmnibashDataset(r"G:\Work Related\Nlc2cmd\Data\Template.json",Trans_Tok,"train",100)
     TrainLoader = DataLoader(Dataset,batch_size=10)
     Sample = next(iter(TrainLoader))
-    print(Sample[0])
-    X,y = Omni(Sample[0],Sample[1])
-    from torch.nn import LogSoftmax
-    from torch import max
-    Need = LogSoftmax(dim=-1)(X)
-    print(Need.size())
-    _,Need = max(Need,dim=-1)
-    print(Need)
-    Out = Trans_Tok.convert_ids_to_tokens(Need.long())
+    X = Omni.decode(Sample[0][0].unsqueeze(0),Sample[1][0].unsqueeze(0))
+    print(X)
+    Out = Trans_Tok.convert_ids_to_tokens(X[0])
     print(Out)
