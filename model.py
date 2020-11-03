@@ -31,3 +31,14 @@ if __name__ == "__main__":
     Omni = OmniBash(Trans_Model,"cpu")
     Dataset = OmnibashDataset(r"G:\Work Related\Nlc2cmd\Data\Template.json",Trans_Tok,"train",100)
     TrainLoader = DataLoader(Dataset,batch_size=10)
+    Sample = next(iter(TrainLoader))
+    print(Sample[0])
+    X,y = Omni(Sample[0],Sample[1])
+    from torch.nn import LogSoftmax
+    from torch import max
+    Need = LogSoftmax(dim=-1)(X)
+    print(Need.size())
+    _,Need = max(Need,dim=-1)
+    print(Need)
+    Out = Trans_Tok.convert_ids_to_tokens(Need.long())
+    print(Out)

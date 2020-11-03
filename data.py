@@ -119,11 +119,10 @@ class OmnibashDataset(Dataset):
 
 
 if __name__ == "__main__":
-    OmnibashDataset(r"G:\Work Related\Nlc2cmd\Data\Template.json")
     #print(Cust_NL_Tokenizer(r'Execute md5sum command on files found by the find command'))
     #print(Cust_NL_Tokenizer(r'find all the files in ".\data\utils" '))
     #print(Cust_Cmd_Tokenizer(r'find  ".\data\utils"'))
     #print(str(Cust_Cmd_Tokenizer(r'find . -perm -600 -print')))
-    #WriteJSON(r"G:\Work Related\Nlc2cmd\Data\nl2bash-data.json"
-    #                            ,"..\Data")
+    WriteJSON(r"G:\Work Related\Nlc2cmd\Data\nl2bash-data.json","..\Data")
+    #OmnibashDataset(r"G:\Work Related\Nlc2cmd\Data\Template.json")
     
