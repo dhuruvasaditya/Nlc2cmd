@@ -22,11 +22,11 @@ class OmniBash(Module):
         ids = nonzero(flatten_shift_loss_mask).view(-1)
         fin_logits,fin_labels = shift_logits.view(-1, shift_logits.size(-1))[ids], shift_labels.view(-1)[ids]
         return fin_logits,fin_labels
-    def decode(self,Input,Label):
+    def decode(self,Input,Label,max_length):
         """decode the given input probabilities with search probabilities"""
         attn_mask = tensor(Label.clone().detach() == 1.0,dtype=uint8,device=self.device)
         Input = Input.long().to(self.device)
-        Output = self.Trans.generate(Input,attention_mask=attn_mask,max_length=150)
+        Output = self.Trans.generate(Input,attention_mask=attn_mask,max_length=max_length)
         return Output
       
 
